@@ -33,7 +33,7 @@ Este archivo contiene la configuración que hace falta para que se lleve a cabo 
 
 ## 2.4 - Ubicación de la carpeta del proyecto
 
-![CrearProjectoJava](/Fotos/4%20-%20Ubicación%20del%20proyecto%20en%20CMD,%20compilado%20y%20lanzado%20del%20comando%20sonar-scanner.png)
+![UbicacionCarpeta](/Fotos/4%20-%20Ubicación%20del%20proyecto%20en%20CMD,%20compilado%20y%20lanzado%20del%20comando%20sonar-scanner.png)
 
 Se accede desde CMD a la ruta donde se ubica el proyecto que se va a refactorizar y hay que compilar el proyecto usando el siguiente código:
 ~~~
@@ -44,31 +44,38 @@ Acto seguido hay que hacer el scaneo usando este comando:
 sonar-scanner
 ~~~
 
-## Proyecto Java antes de refactorizar
+## 2.5 -  Proyecto Java antes de refactorizar
 
-![CrearProjectoJava](/Fotos/5%20-%20Proyecto%20antes%20de%20refactorizar.png)
+![EscaneoPrincipal](/Fotos/5%20-%20Proyecto%20antes%20de%20refactorizar.png)
 
-El proyecto inicialmente tiene 31 errores los cuales se van a ir solucionando uno a uno.
+Al hacer el escaneo inicial se observa que tiene 31 errores los cuales se van a ir solucionando uno a uno.
 
-## Reemplazar el uso de "System.out.print" por "logger.info"
+# 3. - Refactorización
 
-![CrearProjectoJava](/Fotos/6%20-%20Issue%20System.out%20a%20logger.png)
+A continuación se van a nombrar todos los problemas que han surgido a raiz del escaneo, muchos de ellos son problemas similares o repetidos, por lo cual solo se mostraran una vez.
 
-~~~
-import java.util.logging.Logger;
-~~~
+## 3.1 - Problema Nº 1
 
-~~~
-private static Logger logger = Logger.getLogger(GestorFutbol.class.getName());
-~~~
+![Issue1](/Fotos/6%20-%20Issue%20System.out%20a%20logger.png)
 
-~~~
-logger.info("Jugado como local.");
-~~~
+Este mensaje indica que se está usando System.out.println() para imprimir información en consola, lo cual no es una buena práctica en aplicaciones profesionales.
 
-## Reemplazar el uso de "public" en "equipoNombre" 
+>Cambios que se realizan:
+>>~~~
+>>import java.util.logging.Logger;
+>>~~~
+>
+>>~~~
+>>private static Logger logger = Logger.getLogger(GestorFutbol.class.getName());
+>>~~~
+>
+>>~~~
+>>logger.info("Jugado como local.");
+>>~~~
 
-![CrearProjectoJava](/Fotos/7%20-%20Issue%20static%20final%20or%20non-public.png)
+## Problema Nº 2
+
+![Issue2](/Fotos/7%20-%20Issue%20static%20final%20or%20non-public.png)
 
 ~~~
 private String equipoNombre;
@@ -86,9 +93,9 @@ public void setEquipoNombre(String equipoNombre) {
 	}
 ~~~
 
-## Reemplazar el uso de "public" en "equipoNombre" 
+## Problema Nº 3 
 
-![CrearProjectoJava](/Fotos/8%20-%20Issue%20eliminar%20private%20field.png)
+![Issue3](/Fotos/8%20-%20Issue%20eliminar%20private%20field.png)
 
 Solo eliminar las dos lineas siguientes:
 
@@ -100,9 +107,9 @@ private static String NOMBRE_REAL_MADRID = "Real Madrid club de Fútbol";
 private static String NOMBRE_ATLETICO_MADRID = "Atlético de Madrid";
 ~~~
 
-## Reemplazar "return Integer.MIN_VALUE" por "return -1" 
+## Problema Nº 4 
 
-![CrearProjectoJava](/Fotos/9%20-%20Issue%20simply%20return.png)
+![Issue4](/Fotos/9%20-%20Issue%20simply%20return.png)
 
 ~~~
 return Integer.MIN_VALUE;
@@ -113,9 +120,9 @@ return -1;
 ~~~
 
 
-## Reemplazar "return Integer.MIN_VALUE" por "return -1" 
+## Problema Nº 5
 
-![CrearProjectoJava](/Fotos/10%20-%20Issue%20built-in.png)
+![Issue5](/Fotos/10%20-%20Issue%20built-in.png)
 
 ~~~
 logger.info("Victoria. Puntos acumulados: " + puntos);
@@ -125,9 +132,9 @@ se cambia por:
 logger.log(Level.INFO,"Victoria. Puntos acumulados: {0}", puntos);
 ~~~
 
-## Conseguir que la complejidad cognitiva sea mas baja" 
+## Problema Nº 6 
 
-![CrearProjectoJava](/Fotos/11%20-%20Issue%20complejidad%20cognitiva.png)
+![Issue6](/Fotos/11%20-%20Issue%20complejidad%20cognitiva.png)
 
 Antes era asi:
 ~~~
@@ -164,9 +171,9 @@ private void switch_resultados(String resultado) {
 	}
 ~~~
 
-## Equals" 
+## Problema Nº 7 
 
-![CrearProjectoJava](/Fotos/12%20-%20Issue%20equals(%20).png)
+![Issue7](/Fotos/12%20-%20Issue%20equals(%20).png)
 
 ~~~
  @Override
@@ -185,9 +192,9 @@ añadirle abajo esto
     }
 ~~~
 
-## Clone 
+## Problema Nº 8 
 
-![CrearProjectoJava](/Fotos/13%20-%20Issue%20clone.png)
+![Issue8](/Fotos/13%20-%20Issue%20clone.png)
 
 
 yo tenia
@@ -217,6 +224,6 @@ public GestorFutbol(GestorFutbol original) {
 
 ## Proyecto refactorizado
 
-![CrearProjectoJava](/Fotos/15%20-%20Proyecto%20refactorizado.png)
+![RefactorizacionCompletada1](/Fotos/15%20-%20Proyecto%20refactorizado.png)
 
-![CrearProjectoJava](/Fotos/14%20-%20Issues%20a%20cero.png)
+![RefactorizacionCompletada2](/Fotos/14%20-%20Issues%20a%20cero.png)
