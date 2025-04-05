@@ -1,28 +1,54 @@
-# Introducción
+# 1. - Introducción
 
 En este documento se va a explicar como se ha llevado a cabo el proceso de refactorización de un codigo en lenguaje Java usando la herramienta SonarQube.
 
-# Pasos previos
+# 2. - Pasos previos
 
-## Creación del proyecto Java en Eclipse
+## 2.1 - Creación del proyecto Java en Eclipse
 
 ![CrearProjectoJava](/Fotos/1%20-%20Creacion%20de%20JavaProject%20en%20eclipse.png)
 
-## Creación del proyecto en SonarQube
+## 2.2 - Creación del proyecto en SonarQube
 
 ![CrearProjectoSonarQube](/Fotos/2%20-%20Creacion%20de%20proyecto%20en%20sonarqube.png)
 
-## Archivo sonar-project.properties
+## 2.3 - Archivo sonar-project.properties
 
 ![ArchivoSonarProperties](/Fotos/3%20-%20Rellenando%20el%20archivo%20sonar-project.properties.png)
 
-## Ubicación de la carpeta del proyecto
+Este archivo contiene la configuración que hace falta para que se lleve a cabo el scaneo de SonarQube sobre el proyecto java que se quiere refactorizar, este archivo debe colocarse en el mismo directorio donde se ubique el archivo ".java".
+
+>Referencias:
+>>sonar.projectKey - Nombre del proyecto dentro de SonarQube.
+>
+>>sonar.host-url - URL local o remota con el puerto que usa SonarQube.
+>
+>>sonar.token - Token generado para ejecutar el análisis desde CMD.
+>
+>>sonar.languaje - Lenguaje en el que se va a interpretar al escanear.
+>
+>>sonar.sources - Ruta donde está el cdódigo a analizar.
+>
+>>sonar.java.binaries - Ruta de los archivos compilados del proyecto.
+
+## 2.4 - Ubicación de la carpeta del proyecto
 
 ![CrearProjectoJava](/Fotos/4%20-%20Ubicación%20del%20proyecto%20en%20CMD,%20compilado%20y%20lanzado%20del%20comando%20sonar-scanner.png)
+
+Se accede desde CMD a la ruta donde se ubica el proyecto que se va a refactorizar y hay que compilar el proyecto usando el siguiente código:
+~~~
+for /r src %f in (*.java) do javac -d target\classes "%f"
+~~~
+Acto seguido hay que hacer el scaneo usando este comando:
+~~~
+sonar-scanner
+~~~
 
 ## Proyecto Java antes de refactorizar
 
 ![CrearProjectoJava](/Fotos/5%20-%20Proyecto%20antes%20de%20refactorizar.png)
+
+El proyecto inicialmente tiene 31 errores los cuales se van a ir solucionando uno a uno.
 
 ## Reemplazar el uso de "System.out.print" por "logger.info"
 
