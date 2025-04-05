@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class GestorFutbol implements Cloneable, Comparable<GestorFutbol> {
+public class GestorFutbol implements Comparable<GestorFutbol> {
 	
 	private static Logger logger = Logger.getLogger(GestorFutbol.class.getName());
 
@@ -142,11 +142,17 @@ public class GestorFutbol implements Cloneable, Comparable<GestorFutbol> {
         GestorFutbol otro = (GestorFutbol) obj;
         return this.equipoNombre.equals(otro.equipoNombre);
     }
-
-    // Crea una copia del objeto actual
+    
     @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public int hashCode() {
+		return puntos;
+        
+    }
+
+    // Constructor de copia
+    public GestorFutbol(GestorFutbol original) {
+        this.equipoNombre = original.equipoNombre;
+       
     }
 
     // Compara dos objetos GestorFutbol por su nombre de equipo

@@ -137,3 +137,60 @@ private void switch_resultados(String resultado) {
 		}
 	}
 ~~~
+
+## Equals" 
+
+![CrearProjectoJava](/Fotos/12%20-%20Issue%20equals(%20).png)
+
+~~~
+ @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof GestorFutbol)) return false;
+        GestorFutbol otro = (GestorFutbol) obj;
+        return this.equipoNombre.equals(otro.equipoNombre);
+    }
+~~~
+añadirle abajo esto
+~~~
+ @Override
+    public int hashCode() {
+		return puntos;
+        
+    }
+~~~
+
+## Clone 
+
+![CrearProjectoJava](/Fotos/13%20-%20Issue%20clone.png)
+
+
+yo tenia
+~~~
+public class GestorFutbol implements Cloneable, Comparable<GestorFutbol>
+~~~
+
+~~~
+@Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+~~~
+
+y ahora tengo
+
+~~~
+public class GestorFutbol implements Comparable<GestorFutbol>
+~~~
+
+~~~
+public GestorFutbol(GestorFutbol original) {
+        this.equipoNombre = original.equipoNombre;
+       
+    }
+~~~
+
+## Proyecto refactorizado
+
+![CrearProjectoJava](/Fotos/15%20-%20Proyecto%20refactorizado.png)
+
+![CrearProjectoJava](/Fotos/14%20-%20Issues%20a%20cero.png)
