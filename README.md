@@ -73,7 +73,7 @@ Este mensaje indica que se está usando muchos System.out.println() para imprimi
 >>logger.info("Jugado como local.");
 >>~~~
 
-## Problema Nº 2
+## 3.2 - Problema Nº 2
 
 ![Issue2](/Fotos/7%20-%20Issue%20static%20final%20or%20non-public.png)
 
@@ -96,7 +96,7 @@ Este mensaje indica que se está usando equipoNombre como public y debe ser "pri
 >>	}
 >>~~~
 
-## Problema Nº 3 
+## 3.3 - Problema Nº 3 
 
 ![Issue3](/Fotos/8%20-%20Issue%20eliminar%20private%20field.png)
 
@@ -112,7 +112,7 @@ Este mensaje indica que el campo "private static String NOMBRE_REAL_MADRID" est�
 >>private static String NOMBRE_ATLETICO_MADRID = "Atlético de Madrid";
 >>~~~
 
-## Problema Nº 4 
+## 3.4 - Problema Nº 4 
 
 ![Issue4](/Fotos/9%20-%20Issue%20simply%20return.png)
 
@@ -141,11 +141,11 @@ Este mensaje indica que devolver "return Integer.MIN_VALUE" no es un valor está
 >>~~~
 
 
-## Problema Nº 5
+## 3.5 - Problema Nº 5
 
 ![Issue5](/Fotos/10%20-%20Issue%20built-in.png)
 
-Este mensaje indica que se está concatenando strings dentro de un o logger.info(), y es mejor usar formato con String.format().
+Este mensaje indica que se está concatenando strings dentro de un logger.info(), y es mejor usar formato con logger.log().
 
 >Codigo anterior:
 >>~~~
@@ -157,7 +157,7 @@ Este mensaje indica que se está concatenando strings dentro de un o logger.info
 >>logger.log(Level.INFO,"Victoria. Puntos acumulados: {0}", puntos);
 >>~~~
 
-## Problema Nº 6 
+## 3.6 - Problema Nº 6 
 
 ![Issue6](/Fotos/11%20-%20Issue%20complejidad%20cognitiva.png)
 
@@ -258,7 +258,7 @@ Este mensaje indica que se está excediendo la complejidad cognitiva al anidar m
 >>	}
 >>~~~
 
-## Problema Nº 7 
+## 3.7 - Problema Nº 7 
 
 ![Issue7](/Fotos/12%20-%20Issue%20equals(%20).png)
 
@@ -281,38 +281,40 @@ Este mensaje indica que si se sobrescribe el método equals() en una clase, como
 >>    }
 >>~~~
 
-## Problema Nº 8 
+## 3.8 - Problema Nº 8 
 
 ![Issue8](/Fotos/13%20-%20Issue%20clone.png)
 
+Este mensaje indica que no es recomendable sobrescribir el método clone() de la interfaz Cloneable de Java. Puede producir objetos incompletos y resultar confuso para otros desarrolladores que lean el código, por eso se recomienda usar un constructor de copia.
 
-yo tenia
-~~~
-public class GestorFutbol implements Cloneable, Comparable<GestorFutbol>
-~~~
+>Codigo anterior:
+>>~~~
+>>public class GestorFutbol implements Cloneable, Comparable<GestorFutbol>
+>>~~~
+>
+>>~~~
+>>@Override
+>>    public Object clone() throws CloneNotSupportedException {
+>>        return super.clone();
+>>    }
+>>~~~
+>Corrección con constructor de copia:
+>
+>>~~~
+>>public class GestorFutbol implements Comparable<GestorFutbol>
+>>~~~
+>>
+>>~~~
+>>public GestorFutbol(GestorFutbol original) {
+>>        this.equipoNombre = original.equipoNombre;
+>>       
+>>    }
+>>~~~
 
-~~~
-@Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-~~~
-
-y ahora tengo
-
-~~~
-public class GestorFutbol implements Comparable<GestorFutbol>
-~~~
-
-~~~
-public GestorFutbol(GestorFutbol original) {
-        this.equipoNombre = original.equipoNombre;
-       
-    }
-~~~
-
-## Proyecto refactorizado
+## 3.9 - Proyecto refactorizado
 
 ![RefactorizacionCompletada1](/Fotos/15%20-%20Proyecto%20refactorizado.png)
 
 ![RefactorizacionCompletada2](/Fotos/14%20-%20Issues%20a%20cero.png)
+
+Finalmente despues de todas las correciones del código, el escaner de SonarQube da como resultado 0 problemas, de este modo acaba la refactorización del proyecto.
