@@ -58,7 +58,7 @@ A continuación se van a nombrar todos los problemas que han surgido a raiz del 
 
 ![Issue1](/Fotos/6%20-%20Issue%20System.out%20a%20logger.png)
 
-Este mensaje indica que se está usando System.out.println() para imprimir información en consola, lo cual no es una buena práctica en aplicaciones profesionales.
+Este mensaje indica que se está usando muchos System.out.println() para imprimir información en consola, lo cual no es una buena práctica en aplicaciones profesionales.
 
 >Cambios que se realizan:
 >>~~~
@@ -77,120 +77,209 @@ Este mensaje indica que se está usando System.out.println() para imprimir infor
 
 ![Issue2](/Fotos/7%20-%20Issue%20static%20final%20or%20non-public.png)
 
-~~~
-private String equipoNombre;
-~~~
+Este mensaje indica que se está usando equipoNombre como public y debe ser "private", ademas de poder accederse por los métodos "getEquipoNombre()" y "setEquipoNombre()".
 
-~~~
-public String getEquipoNombre() {
-		return equipoNombre;
-	}
-~~~
-
-~~~
-public void setEquipoNombre(String equipoNombre) {
-		this.equipoNombre = equipoNombre;
-	}
-~~~
+>Cambios que se realizan:
+>>~~~
+>>private String equipoNombre;
+>>~~~
+>
+>>~~~
+>>public String getEquipoNombre() {
+>>		return equipoNombre;
+>>	}
+>>~~~
+>
+>>~~~
+>>public void setEquipoNombre(String equipoNombre) {
+>>		this.equipoNombre = equipoNombre;
+>>	}
+>>~~~
 
 ## Problema Nº 3 
 
 ![Issue3](/Fotos/8%20-%20Issue%20eliminar%20private%20field.png)
 
-Solo eliminar las dos lineas siguientes:
+Este mensaje indica que el campo "private static String NOMBRE_REAL_MADRID" está declarado pero nunca se usa en el código. Si no se utiliza, hay que eliminarlo para mantener el código limpio.
 
-~~~
-private static String NOMBRE_REAL_MADRID = "Real Madrid club de Fútbol";
-~~~
-
-~~~
-private static String NOMBRE_ATLETICO_MADRID = "Atlético de Madrid";
-~~~
+>Estas son las lineas que se eliminan:
+>
+>>~~~
+>>private static String NOMBRE_REAL_MADRID = "Real Madrid club de Fútbol";
+>>~~~
+>
+>>~~~
+>>private static String NOMBRE_ATLETICO_MADRID = "Atlético de Madrid";
+>>~~~
 
 ## Problema Nº 4 
 
 ![Issue4](/Fotos/9%20-%20Issue%20simply%20return.png)
 
-~~~
-return Integer.MIN_VALUE;
-~~~
-se cambia por:
-~~~
-return -1;
-~~~
+Este mensaje indica que devolver "return Integer.MIN_VALUE" no es un valor estándar en la implementación de compareTo() , por lo tanto es mas correcto usar "return -1"
+
+>Codigo anterior:
+>>~~~
+>>@Override
+>>public int compareTo(GestorFutbol otro) {
+>>    if (this.equipoNombre == null || otro.equipoNombre == null) {
+>>        return Integer.MIN_VALUE;
+>>    }
+>>    return this.equipoNombre.compareTo(otro.equipoNombre);
+>>}
+>>~~~
+>
+>Corrección:
+>>~~~
+>>@Override
+>>public int compareTo(GestorFutbol otro) {
+>>    if (this.equipoNombre == null || otro.equipoNombre == null) {
+>>        return -1; 
+>>    }
+>>    return this.equipoNombre.compareTo(otro.equipoNombre);
+>>}
+>>~~~
 
 
 ## Problema Nº 5
 
 ![Issue5](/Fotos/10%20-%20Issue%20built-in.png)
 
-~~~
-logger.info("Victoria. Puntos acumulados: " + puntos);
-~~~
-se cambia por:
-~~~
-logger.log(Level.INFO,"Victoria. Puntos acumulados: {0}", puntos);
-~~~
+Este mensaje indica que se está concatenando strings dentro de un o logger.info(), y es mejor usar formato con String.format().
+
+>Codigo anterior:
+>>~~~
+>>logger.info("Victoria. Puntos acumulados: " + puntos);
+>>~~~
+>
+>Corrección:
+>>~~~
+>>logger.log(Level.INFO,"Victoria. Puntos acumulados: {0}", puntos);
+>>~~~
 
 ## Problema Nº 6 
 
 ![Issue6](/Fotos/11%20-%20Issue%20complejidad%20cognitiva.png)
 
-Antes era asi:
-~~~
-switch (resultado.length()) {
-                case 7:
-                	logger.info("Resultado corto.");
-                    break;
-                case 14:
-                	logger.info("Resultado medio.");
-                    break;
-                default:
-                	logger.info("Resultado de longitud estándar.");
-                    break;
-            }
-~~~
-Se resume en este metodo:
-~~~
-switch_resultados(resultado);
-~~~
-Y queda asi:
-~~~
-private void switch_resultados(String resultado) {
-		switch (resultado.length()) {
-		    case 7:
-		    	logger.info("Resultado corto.");
-		        break;
-		    case 14:
-		    	logger.info("Resultado medio.");
-		        break;
-		    default:
-		    	logger.info("Resultado de longitud estándar.");
-		        break;
-		}
-	}
-~~~
+Este mensaje indica que se está excediendo la complejidad cognitiva al anidar muchos if o usar muchos bucles, al estar el limite en 15 y haberlo superado teniendo una cantidad de 18, hay que bajarla haciendo metodos mas pequeños.
+
+>Codigo anterior:
+>>~~~
+>>public void procesarTemporada(List<String> resultados) {
+>>    for (String resultado : resultados) {
+>>        if (resultado.equals("victoria")) {
+>>            puntos += 3;
+>>            System.out.println("Victoria. Puntos acumulados: " + puntos);
+>>        } else if (resultado.equals("empate")) {
+>>            puntos += 1;
+>>            System.out.println("Empate. Puntos acumulados: " + puntos);
+>>        } else if (resultado.equals("derrota")) {
+>>            System.out.println("Derrota. Puntos acumulados: " + puntos);
+>>        }
+>>
+>>        if (resultado.contains("local")) {
+>>            System.out.println("Jugado como local.");
+>>            if (resultado.length() > 10) {
+>>                System.out.println("Detalle adicional: " + resultado);
+>>            }
+>>        } else if (resultado.contains("visitante")) {
+>>            System.out.println("Jugado como visitante.");
+>>            if (resultado.length() > 8) {
+>>                System.out.println("Comentario: " + resultado);
+>>            }
+>>        }
+>>
+>>        switch (resultado.length()) {
+>>            case 7:
+>>                System.out.println("Resultado corto.");
+>>                break;
+>>            case 14:
+>>                System.out.println("Resultado medio.");
+>>                break;
+>>            default:
+>>                System.out.println("Resultado de longitud estándar.");
+>>                break;
+>>        }
+>>
+>>        if (resultado.endsWith("!")) {
+>>            System.out.println("¡Resultado enfatizado!");
+>>        }
+>>
+>>        System.out.println("----------------------");
+>>    }
+>>}
+>>~~~
+> Se ha reducido la complejidad en estos 3 métodos más pequeños:
+>>~~~
+>>sumapuntos(resultado);
+>>tipopartido(resultado);
+>>switchresultados(resultado);
+>>~~~
+>Quedando de esta manera:
+>>~~~
+>>private void tipopartido(String resultado) {
+>>		if (resultado.contains("local")) {
+>>			logger.log(Level.INFO,"Jugado como local.");
+>>		    if (resultado.length() > 10) {
+>>		    	logger.log(Level.INFO,"Detalle adicional: {0}", resultado);
+>>		    }
+>>		} else if (resultado.contains("visitante")) {
+>>			logger.info("Jugado como visitante.");
+>>		    if (resultado.length() > 8) {
+>>		    	logger.log(Level.INFO,"Comentario: {0}", resultado);
+>>		    }
+>>		}
+>>	}
+>>
+>>	private void sumapuntos(String resultado) {
+>>		if (resultado.equals("victoria")) {
+>>		    puntos += 3;
+>>		    logger.log(Level.INFO,"Victoria. Puntos acumulados: {0}", puntos);
+>>		} else if (resultado.equals("empate")) {
+>>		    puntos += 1;
+>>		    logger.log(Level.INFO,"Empate. Puntos acumulados: {0}", puntos);
+>>		} else if (resultado.equals("derrota")) {
+>>			logger.log(Level.INFO,"Derrota. Puntos acumulados: {0}", puntos);
+>>		}
+>>	}
+>>
+>>	private void switchresultados(String resultado) {
+>>		switch (resultado.length()) {
+>>		    case 7:
+>>		    	logger.info("Resultado corto.");
+>>		        break;
+>>		    case 14:
+>>		    	logger.info("Resultado medio.");
+>>		        break;
+>>		    default:
+>>		    	logger.info("Resultado de longitud estándar.");
+>>		        break;
+>>		}
+>>	}
+>>~~~
 
 ## Problema Nº 7 
 
 ![Issue7](/Fotos/12%20-%20Issue%20equals(%20).png)
 
-~~~
- @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof GestorFutbol)) return false;
-        GestorFutbol otro = (GestorFutbol) obj;
-        return this.equipoNombre.equals(otro.equipoNombre);
-    }
-~~~
-añadirle abajo esto
-~~~
- @Override
-    public int hashCode() {
-		return puntos;
-        
-    }
-~~~
+Este mensaje indica que si se sobrescribe el método equals() en una clase, como es en "GestorFutbol", tambien se debe sobreescribir hasCode(), ya que Java utiliza ambos métodos juntos.
+
+>Codigo anterior:
+>>~~~
+>>@Override
+>>    public boolean equals(Object obj) {
+>>        if (!(obj instanceof GestorFutbol)) return false;
+>>        GestorFutbol otro = (GestorFutbol) obj;
+>>        return this.equipoNombre.equals(otro.equipoNombre);
+>>    }
+>>~~~
+>Se le añade justo después la sobrescritura de hasCode() :
+>>~~~
+>>@Override
+>>    public int hashCode() {
+>>		return puntos;  
+>>    }
+>>~~~
 
 ## Problema Nº 8 
 
