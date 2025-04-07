@@ -116,7 +116,9 @@ Este mensaje indica que el campo "private static String NOMBRE_REAL_MADRID" est�
 
 ![Issue4](/Fotos/9%20-%20Issue%20simply%20return.png)
 
-Este mensaje indica que devolver "return Integer.MIN_VALUE" no es un valor estándar en la implementación de compareTo() , por lo tanto es mas correcto usar "return -1"
+Este mensaje indica que devolver "return Integer.MIN_VALUE" no es un valor estándar en la implementación de compareTo() , por lo tanto es mas correcto usar "return -1".
+
+Devolver Integer.MIN_VALUE podría generar resultados inesperados si alguien interpreta eso como un resultado válido de comparación.
 
 >Codigo anterior:
 >>~~~
@@ -145,7 +147,7 @@ Este mensaje indica que devolver "return Integer.MIN_VALUE" no es un valor está
 
 ![Issue5](/Fotos/10%20-%20Issue%20built-in.png)
 
-Este mensaje indica que se está concatenando strings dentro de un logger.info(), y es mejor usar formato con logger.log().
+Este mensaje indica que se está concatenando strings dentro de un logger.info(), utilizar esto es menos limpio y eficiente que usar el formato con logger.log().
 
 >Codigo anterior:
 >>~~~
